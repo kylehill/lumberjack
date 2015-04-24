@@ -78,11 +78,25 @@
 </head>
 <body>
   <div class="container">
-    <div id="editor">function demo(x) {
-  log(x)
+<div id="editor">/*
+* Meet LumberJack!
+* It's tool for anyone that's lecturing on
+*   JS fundamentals to new developers.
+* Think of it as a more illustrative console.log().
+*
+* Call the function log() with any parameter 
+*   to log it out to the right side w/ line number.
+*/
+log("hello, world!");
+
+function greeter(person) {
+  log(person);
+  return "Hi, " + person;
 }
 
-demo(42)</div>
+var salutation = greeter(person);
+log(salulation);
+</div>
     <div id="logger">
     </div>
   </div>
