@@ -20,6 +20,7 @@
     #logger {
       left: 50%;
       background: black;
+      overflow-y: scroll;
     }
 
     .log-message {
@@ -55,6 +56,14 @@
 
     .log-message .gold {
       color: #E6DB74;
+    }
+
+    .log-message .red {
+      color: #F92672;
+    }
+
+    .log-message .blue {
+      color: #66D9EF;
     }
 
     .log-message pre {
@@ -103,30 +112,43 @@ log(salutation);
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js"></script>
   <script>
+
+    var parseError = function(err) {
+      return parseInt(err.stack.split("\n")[2].split(", ")[1].split(":")[1])
+    }
+
     function loggingFunction(data) {
       var e
       try { undefined() }
       catch(err) {
-        var line = parseInt(err.stack.split("\n")[2].split(", ")[1].split(":")[1])
+        var line = parseError(err)
 
         loggedMessages.push({
           line: line,
           data: data
         })
       }
+
+      return data
     }
     var log = loggingFunction
 
     var loggedMessages = []
     var checkCode = function() {
       loggedMessages = []
+      var e
 
       // Thar be dragons here
       try {
         eval(editor.getSession().getValue())
       }
       catch(err) {
-        // do something
+        loggedMessages.push({
+          line: parseInt(err.stack.split("\n")[1].split(", ")[1].split(":")[1]),
+          error: true,
+          data: err.name + ": " + err.message
+        })
+        window.err = err
       }
       
       displayLogs()
@@ -196,10 +218,17 @@ log(salutation);
 
         var str = "<div class='line'>Line " + msg.line + "</div>"
         str += "<div class='snippet'> - " + editor.getSession().getValue().split("\n")[msg.line - 1] + "</div>"
-        str += "<div class='value'>" + colorEntities(msg.data) + "</div>"
-
+          
+        if (msg.error) {
+          messageDiv.className = "log-message error"
+          str += "<div class='value'><span class='red error'>" + msg.data + "</span></div>"
+        }
+        else {
+          str += "<div class='value'>" + colorEntities(msg.data) + "</div>"
+        }
+        
         messageDiv.innerHTML = str
-
+        
         logger.appendChild(messageDiv)
       })
     }
