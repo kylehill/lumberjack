@@ -21,7 +21,7 @@ module.exports = {
   read: function(req, res) {
     Data.findOne({ slug: req.params.slug }).exec(function(err, data){
       if (!data) {
-        renderHome()
+        renderHome(res)
         return
       }
       res.render("homepage", { text: data.text })
@@ -29,7 +29,7 @@ module.exports = {
   },
 
   home: function(req, res) {
-    renderHome()
+    renderHome(res)
   }
 
 };
