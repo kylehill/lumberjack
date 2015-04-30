@@ -9,17 +9,48 @@
       padding: 0;
       box-sizing: border-box;
     }
+
+    .container {
+      background: black;
+      height: 100vh;
+    }
+
+    .logo {
+      background:url("/logo.png");
+      width: 300px;
+      height: 80px;
+      margin-left: 1%;
+      display: inline-block;
+    }
+
+    .button {
+      height: 60px;
+      margin: 10px 2%;
+      width: 150px;
+      line-height: 60px;
+      background: green;
+      color: white;
+      float: right;
+      border: solid 1px white;
+      font-size: 26px;
+      border-radius: 12px 0 0 0;
+    }
+
     #editor, #logger { 
       position: absolute;
-      top: 0;
+      top: 80px;
       bottom: 0;
-      width: 50%;
+      width: 48%;
       font-size: 16px;
     }
 
+    #editor {
+      left: 2%;
+    }
+
     #logger {
-      left: 50%;
-      background: black;
+      right: 2%;
+      background: #272822;
       overflow-y: scroll;
     }
 
@@ -87,30 +118,17 @@
 </head>
 <body>
   <div class="container">
-<div id="editor">/*
-* Meet LumberJack!
-* It's tool for anyone that's lecturing on
-*   JS fundamentals to new developers.
-* Think of it as a more illustrative console.log().
-*
-* Call the function log() with any parameter 
-*   to log it out to the right side w/ line number.
-*/
-log("hello, world!");
-
-function greeter(person) {
-  log(person);
-  return "Hi, " + person;
-}
-
-var salutation = greeter("LumberJack");
-log(salutation);
-</div>
+    <header>
+      <div class="logo"></div>
+      <button class="button">Save</button>
+    </header>
+<div id="editor">{{{text}}}</div>
     <div id="logger">
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
   <script>
 
     var parseError = function(err) {
@@ -119,7 +137,7 @@ log(salutation);
 
     function loggingFunction(data) {
       var e
-      try { undefined() }
+      try { throw new Error() }
       catch(err) {
         var line = parseError(err)
 
@@ -244,10 +262,26 @@ log(salutation);
         rerunTimeout = setTimeout(checkCode, 500)
       })
 
-      rerunTimeout = setTimeout(checkCode, 100)
+      rerunTimeout = setTimeout(checkCode, 1)
     }
     
     init()
+
+    $(".button").on("click", function(){
+
+      $.ajax({
+        url: "/save",
+        method: "POST",
+        data: {
+          text: editor.getSession().getValue()
+        },
+        success: function(data) {
+          window.location = "/s/" + data.slug
+        }
+      })
+
+    })
+
   </script>
 </body>
 </html>
