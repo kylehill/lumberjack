@@ -33,9 +33,9 @@ module.exports.routes = {
   ***************************************************************************/
 
   'get /': "DataController.home",
-
-  "post /save": "DataController.save",
-  "get /s/:slug": "DataController.read"
+  
+  "get /api/:slug": "DataController.read",
+  "post /api/save": "DataController.save"
 
   /***************************************************************************
   *                                                                          *

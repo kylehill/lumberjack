@@ -1,0 +1,19 @@
+<div class="container" ng-controller="mainController">
+  <header>
+    <div class="logo" ng-click="clickHeader()"></div>
+    <button ng-click="clickSave()" class="button">Save</button>
+  </header>
+  <div id="editor"></div>
+  <div id="logger">
+    <div ng-repeat="message in messages" class="log-message">
+      <div class="line">{{ message.line }}</div>
+      <div class="snippet">{{ message.snippet }}</div>
+      <div class="value" 
+        ng-bind-html="message.value | unsafe"
+        ng-class="{ red: message.error }">
+        
+      </div>
+    </div>
+  </div>
+</div>
+

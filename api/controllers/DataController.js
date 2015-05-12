@@ -14,22 +14,25 @@ module.exports = {
 	
   save: function(req, res) {
     Data.add(req.body, function(err, s){
+      if (err || !s) {
+        return res.json({ error: true })
+      }
+      //console.log("!", err, s)
       res.json({ slug: s.slug })
     })
   },
 
   read: function(req, res) {
     Data.findOne({ slug: req.params.slug }).exec(function(err, data){
-      if (!data) {
-        renderHome(res)
-        return
+      if (err || !data) {
+        res.json({})
       }
-      res.render("homepage", { text: data.text })
+      res.json(data)
     })
   },
 
   home: function(req, res) {
-    renderHome(res)
+    res.render("homepage")
   }
 
 };

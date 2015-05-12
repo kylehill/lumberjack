@@ -15,6 +15,10 @@ module.exports = {
 
   add: function(data, callback) {
     Data.create(data, function(err, data){
+      if (err || !data) {
+        console.log(err)
+        return callback(err, data)
+      }
       data.slug = shortid.generate()
       data.save(callback)
     })
